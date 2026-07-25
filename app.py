@@ -1,6 +1,6 @@
 """
 ===============================================================================
-MEDICO.AI - ENTERPRISE SINGLE-FILE ARCHITECTURE
+MEDICO.AI - ENTERPRISE SINGLE-FILE ARCHITECTURE (RENDER READY)
 ===============================================================================
 Advanced Predictive Analytics Engine for Hospital Charges
 Features: 15 Dynamic Themes, Glassmorphism UI, Sidebar Dashboard, 
@@ -609,7 +609,7 @@ class DatabaseCore:
         self._boot_sequence()
         
     def _get_conn(self):
-        # check_same_thread=False allows Flask multithreading on AWS
+        # check_same_thread=False allows Flask multithreading on Render/AWS
         conn = sqlite3.connect(self.db_file, check_same_thread=False)
         conn.row_factory = sqlite3.Row
         return conn
@@ -688,7 +688,7 @@ class MLManager:
         self._generate_fallback()
 
     def _generate_fallback(self):
-        """Generates an in-memory regression model to prevent AWS crashes."""
+        """Generates an in-memory regression model to prevent crashes."""
         from sklearn.linear_model import LinearRegression
         # Synthetic dataset reflecting general insurance parameters
         X = np.array([
@@ -843,13 +843,16 @@ def api_analytics():
     })
 
 # =============================================================================
-# 6. SERVER EXECUTION
+# 6. SERVER EXECUTION (RENDER CONFIGURATION INCLUDED)
 # =============================================================================
 
 if __name__ == '__main__':
     print("==================================================")
     print("🚀 MEDICO.AI V3 SERVER BOOTING...")
-    print("🌐 Binding to 0.0.0.0 on port 5000")
     print("==================================================")
-    # Threaded=True handles multiple UI requests smoothly on AWS
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    
+    # This automatically grabs the port Render assigns, or defaults to 5000 locally
+    port = int(os.environ.get("PORT", 5000))
+    
+    # Threaded=True handles multiple UI requests smoothly
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
