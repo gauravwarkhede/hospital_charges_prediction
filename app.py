@@ -1,10 +1,10 @@
 """
 ===============================================================================
-MEDICO.AI - ENTERPRISE SINGLE-FILE ARCHITECTURE (RENDER READY)
+MEDICO.AI - F1 TELEMETRY EDITION (RENDER READY)
 ===============================================================================
 Advanced Predictive Analytics Engine for Hospital Charges
-Features: 16 Dynamic Themes (including Netflix), Glassmorphism UI, 
-Smooth Animations, Chart.js Integrations, SQLite Persistence.
+Features: 11 Formula 1 Themes, Clean Square Dashboard UI, 
+Chart.js Integrations, SQLite Persistence, and Fallback ML Engine.
 ===============================================================================
 """
 
@@ -25,11 +25,11 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
-<html lang="en" data-theme="netflix-dark">
+<html lang="en" data-theme="mercedes">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medico.AI | Advanced Health Analytics</title>
+    <title>Medico.AI | Pit Wall Telemetry</title>
     <!-- Modern Bold Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -39,101 +39,90 @@ HTML_TEMPLATE = """
         /* ================= CSS VARIABLES & THEMES ================= */
         :root {
             --sidebar-width: 280px;
-            --glass-blur: blur(20px);
-            --card-radius: 20px;
-            --transition-fast: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --card-radius: 0px; /* Sharp Square Corners */
+            --transition-fast: all 0.2s ease-in-out;
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             --font-head: 'Montserrat', sans-serif;
             --font-body: 'Inter', sans-serif;
         }
 
-        /* 16 Custom Themes (Added Netflix Dark) */
-        [data-theme="netflix-dark"] { --bg-base: #000000; --bg-card: rgba(20, 20, 20, 0.85); --border-glow: rgba(229, 9, 20, 0.5); --accent-primary: #e50914; --accent-secondary: #b20710; --text-main: #ffffff; --text-muted: #a3a3a3; }
-        [data-theme="cyberpunk"] { --bg-base: #080c14; --bg-card: rgba(13, 20, 36, 0.75); --border-glow: rgba(0, 240, 255, 0.3); --accent-primary: #00f0ff; --accent-secondary: #8b5cf6; --text-main: #f8fafc; --text-muted: #64748b; }
-        [data-theme="solar-golden"] { --bg-base: #0f0d0a; --bg-card: rgba(28, 23, 16, 0.8); --border-glow: rgba(245, 158, 11, 0.35); --accent-primary: #f59e0b; --accent-secondary: #d97706; --text-main: #fffbeb; --text-muted: #a1a1aa; }
-        [data-theme="purple-magic"] { --bg-base: #0e0a1a; --bg-card: rgba(25, 18, 45, 0.8); --border-glow: rgba(168, 85, 247, 0.35); --accent-primary: #a855f7; --accent-secondary: #c084fc; --text-main: #faf5ff; --text-muted: #988aae; }
-        [data-theme="ice-sapphire"] { --bg-base: #06111e; --bg-card: rgba(12, 30, 52, 0.75); --border-glow: rgba(56, 189, 248, 0.35); --accent-primary: #38bdf8; --accent-secondary: #0284c7; --text-main: #f0f9ff; --text-muted: #64748b; }
-        [data-theme="emerald-bio"] { --bg-base: #04140d; --bg-card: rgba(10, 36, 24, 0.8); --border-glow: rgba(16, 185, 129, 0.35); --accent-primary: #10b981; --accent-secondary: #059669; --text-main: #ecfdf5; --text-muted: #6ee7b7; }
-        [data-theme="crimson-velvet"] { --bg-base: #14060a; --bg-card: rgba(36, 12, 18, 0.8); --border-glow: rgba(244, 63, 94, 0.35); --accent-primary: #f43f5e; --accent-secondary: #e11d48; --text-main: #fff1f2; --text-muted: #fda4af; }
-        [data-theme="deep-space"] { --bg-base: #030308; --bg-card: rgba(15, 15, 32, 0.85); --border-glow: rgba(99, 102, 241, 0.35); --accent-primary: #6366f1; --accent-secondary: #4f46e5; --text-main: #eef2ff; --text-muted: #818cf8; }
-        [data-theme="sunset-synth"] { --bg-base: #120a17; --bg-card: rgba(32, 16, 42, 0.8); --border-glow: rgba(249, 115, 22, 0.35); --accent-primary: #f97316; --accent-secondary: #ec4899; --text-main: #fff7ed; --text-muted: #fdba74; }
-        [data-theme="matrix-obsidian"] { --bg-base: #050a05; --bg-card: rgba(10, 25, 12, 0.85); --border-glow: rgba(34, 197, 94, 0.35); --accent-primary: #22c55e; --accent-secondary: #16a34a; --text-main: #f0fdf4; --text-muted: #86efac; }
-        [data-theme="solar-light"] { --bg-base: #f1f5f9; --bg-card: rgba(255, 255, 255, 0.9); --border-glow: rgba(14, 165, 233, 0.3); --accent-primary: #0284c7; --accent-secondary: #6366f1; --text-main: #0f172a; --text-muted: #475569; }
-        [data-theme="formula-grid"] { --bg-base: #111111; --bg-card: rgba(26, 26, 26, 0.85); --border-glow: rgba(255, 40, 0, 0.4); --accent-primary: #ff2800; --accent-secondary: #a61a00; --text-main: #ffffff; --text-muted: #8c8c8c; }
-        [data-theme="neon-paddock"] { --bg-base: #0a0a0a; --bg-card: rgba(15, 15, 15, 0.8); --border-glow: rgba(255, 135, 0, 0.4); --accent-primary: #ff8700; --accent-secondary: #00e5ff; --text-main: #f4f4f4; --text-muted: #737373; }
-        [data-theme="oceanic"] { --bg-base: #001220; --bg-card: rgba(0, 31, 63, 0.75); --border-glow: rgba(0, 255, 204, 0.3); --accent-primary: #00ffcc; --accent-secondary: #0074d9; --text-main: #e6f7ff; --text-muted: #80c1ff; }
-        [data-theme="nebula"] { --bg-base: #1a0b2e; --bg-card: rgba(45, 19, 77, 0.8); --border-glow: rgba(255, 0, 128, 0.4); --accent-primary: #ff0080; --accent-secondary: #7928ca; --text-main: #f9ebff; --text-muted: #b886ee; }
-        [data-theme="monolith"] { --bg-base: #1c1c1c; --bg-card: rgba(45, 45, 45, 0.9); --border-glow: rgba(255, 255, 255, 0.2); --accent-primary: #ffffff; --accent-secondary: #888888; --text-main: #f0f0f0; --text-muted: #a0a0a0; }
+        /* 11 Formula 1 Themes */
+        [data-theme="mercedes"] { --bg-base: #050505; --bg-card: #121212; --border-glow: #00A19C; --accent-primary: #00A19C; --accent-secondary: #C8CCCE; --text-main: #ffffff; --text-muted: #8c8c8c; }
+        [data-theme="mclaren"] { --bg-base: #0a0a0a; --bg-card: #141414; --border-glow: #FF8000; --accent-primary: #FF8000; --accent-secondary: #474747; --text-main: #ffffff; --text-muted: #999999; }
+        [data-theme="redbull"] { --bg-base: #000B18; --bg-card: #001A33; --border-glow: #FDB927; --accent-primary: #FDB927; --accent-secondary: #CC1E4A; --text-main: #ffffff; --text-muted: #8A9CAE; }
+        [data-theme="ferrari"] { --bg-base: #0A0000; --bg-card: #170000; --border-glow: #EF1A2D; --accent-primary: #EF1A2D; --accent-secondary: #FFDF00; --text-main: #ffffff; --text-muted: #A37A7A; }
+        [data-theme="williams"] { --bg-base: #000A1A; --bg-card: #001433; --border-glow: #00A3E0; --accent-primary: #00A3E0; --accent-secondary: #FFFFFF; --text-main: #ffffff; --text-muted: #7A99B8; }
+        [data-theme="astonmartin"] { --bg-base: #00120A; --bg-card: #002214; --border-glow: #CEDC00; --accent-primary: #CEDC00; --accent-secondary: #00665E; --text-main: #ffffff; --text-muted: #80998F; }
+        [data-theme="haas"] { --bg-base: #0d0d0d; --bg-card: #1a1a1a; --border-glow: #E6002B; --accent-primary: #E6002B; --accent-secondary: #FFFFFF; --text-main: #ffffff; --text-muted: #999999; }
+        [data-theme="alpine"] { --bg-base: #000F1A; --bg-card: #001A33; --border-glow: #FD4BC7; --accent-primary: #FD4BC7; --accent-secondary: #005094; --text-main: #ffffff; --text-muted: #8A9CAE; }
+        [data-theme="cadillac"] { --bg-base: #000000; --bg-card: #111111; --border-glow: #D4AF37; --accent-primary: #D4AF37; --accent-secondary: #FFFFFF; --text-main: #ffffff; --text-muted: #A3A3A3; }
+        [data-theme="audi"] { --bg-base: #080808; --bg-card: #161616; --border-glow: #F50537; --accent-primary: #F50537; --accent-secondary: #C0C0C0; --text-main: #ffffff; --text-muted: #999999; }
+        [data-theme="sauber"] { --bg-base: #000000; --bg-card: #0D0D0D; --border-glow: #00E701; --accent-primary: #00E701; --accent-secondary: #FFFFFF; --text-main: #ffffff; --text-muted: #808080; }
 
         /* ================= BASE STYLES & LAYOUT ================= */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-body);
             min-height: 100vh; overflow-x: hidden; display: flex; transition: var(--transition-smooth);
-            background-image: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.015) 0%, transparent 60%),
-                              radial-gradient(circle at 90% 90%, var(--border-glow) 0%, transparent 50%);
         }
 
         /* Animations */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px var(--border-glow); } 100% { box-shadow: 0 0 30px var(--accent-primary); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
 
         /* ================= SIDEBAR ================= */
         .sidebar {
             width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; left: 0;
-            background: var(--bg-card); backdrop-filter: var(--glass-blur);
-            border-right: 1px solid var(--border-glow); padding: 2.5rem 1.5rem;
+            background: var(--bg-card);
+            border-right: 2px solid var(--accent-secondary); padding: 2.5rem 1.5rem;
             display: flex; flex-direction: column; z-index: 100; transition: var(--transition-smooth);
         }
-        .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 3.5rem; cursor: pointer; transition: var(--transition-fast); }
-        .brand:hover { transform: scale(1.05); }
+        .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 3.5rem; cursor: pointer; }
         .brand-logo {
-            width: 48px; height: 48px; border-radius: 14px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #fff;
-            animation: pulseGlow 3s infinite alternate; box-shadow: 0 0 15px var(--border-glow);
+            width: 48px; height: 48px; border-radius: var(--card-radius);
+            background: var(--accent-primary);
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #000;
         }
-        .brand-text { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
+        .brand-text { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;}
         
         .nav-menu { display: flex; flex-direction: column; gap: 12px; flex: 1; }
         .nav-item {
-            padding: 1.1rem 1.2rem; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 14px;
-            font-weight: 600; color: var(--text-muted); transition: var(--transition-fast); border: 1px solid transparent;
+            padding: 1.1rem 1.2rem; border-radius: var(--card-radius); cursor: pointer; display: flex; align-items: center; gap: 14px;
+            font-weight: 700; color: var(--text-muted); transition: var(--transition-fast); border: 1px solid transparent; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
         }
         .nav-item:hover, .nav-item.active {
-            background: rgba(255, 255, 255, 0.08); color: var(--accent-primary);
-            border-color: var(--border-glow); transform: translateX(8px);
+            background: rgba(255, 255, 255, 0.05); color: var(--accent-primary);
+            border-left: 4px solid var(--accent-primary); transform: translateX(5px);
         }
 
         /* Sleek Dropdown */
         .theme-selector { margin-top: auto; }
-        .theme-selector label { display: block; font-size: 0.8rem; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;}
+        .theme-selector label { display: block; font-size: 0.8rem; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px;}
         .theme-select {
-            appearance: none; width: 100%; background: rgba(0,0,0,0.3) url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") no-repeat right 1rem top 50%;
-            background-size: 0.8rem auto; color: var(--text-main); border: 1px solid rgba(255,255,255,0.15); padding: 1rem 1.2rem; border-radius: 14px;
-            font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; outline: none; cursor: pointer; transition: var(--transition-fast);
+            appearance: none; width: 100%; background: #000 url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") no-repeat right 1rem top 50%;
+            background-size: 0.8rem auto; color: var(--accent-primary); border: 2px solid var(--accent-primary); padding: 1rem 1.2rem; border-radius: var(--card-radius);
+            font-family: var(--font-head); font-weight: 800; font-size: 0.95rem; outline: none; cursor: pointer; transition: var(--transition-fast); text-transform: uppercase;
         }
-        .theme-select:hover, .theme-select:focus { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--border-glow); background-color: rgba(0,0,0,0.5); }
-        .theme-select option { background-color: #1a1a1a; color: #fff; }
+        .theme-select:hover, .theme-select:focus { background-color: rgba(255,255,255,0.1); }
+        .theme-select option { background-color: #000; color: #fff; font-family: var(--font-body); }
 
         /* ================= MAIN CONTENT ================= */
         .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 3rem 4rem; width: calc(100% - var(--sidebar-width)); }
         
-        .header-title { margin-bottom: 2.5rem; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        .header-title h1 { font-family: var(--font-head); font-size: 2.8rem; text-transform: uppercase; font-weight: 900; margin-bottom: 8px; letter-spacing: -1px; }
-        .header-title p { color: var(--text-muted); font-size: 1.15rem; font-weight: 400; }
+        .header-title { margin-bottom: 2.5rem; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;}
+        .header-title h1 { font-family: var(--font-head); font-size: 2.5rem; text-transform: uppercase; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; color: var(--accent-primary); }
+        .header-title p { color: var(--text-muted); font-size: 1.1rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;}
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
 
         /* Cards */
         .glass-card {
-            background: var(--bg-card); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: var(--card-radius); padding: 2rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); 
-            transition: var(--transition-smooth); position: relative; overflow: hidden; animation: slideUp 0.8s ease backwards;
+            background: var(--bg-card); border: 1px solid var(--accent-secondary);
+            border-radius: var(--card-radius); padding: 2rem; 
+            transition: var(--transition-smooth); position: relative; overflow: hidden; animation: slideUp 0.6s ease backwards;
         }
-        .glass-card:hover { border-color: var(--border-glow); transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 30px var(--border-glow); }
+        .glass-card:hover { border-color: var(--accent-primary); }
         .glass-card:nth-child(1) { animation-delay: 0.1s; }
         .glass-card:nth-child(2) { animation-delay: 0.2s; }
         .glass-card:nth-child(3) { animation-delay: 0.3s; }
@@ -141,8 +130,8 @@ HTML_TEMPLATE = """
         .glass-card:nth-child(5) { animation-delay: 0.5s; }
 
         .card-header {
-            display: flex; align-items: center; justify-content: space-between; font-family: var(--font-head); font-size: 1.2rem; font-weight: 800;
-            color: var(--accent-primary); border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 1.2rem; margin-bottom: 1.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; align-items: center; justify-content: space-between; font-family: var(--font-head); font-size: 1.1rem; font-weight: 900;
+            color: var(--text-main); border-bottom: 2px solid var(--accent-secondary); padding-bottom: 1rem; margin-bottom: 1.8rem; text-transform: uppercase; letter-spacing: 1px;
         }
         
         /* Grid Placements */
@@ -153,79 +142,73 @@ HTML_TEMPLATE = """
         .table-card { grid-column: span 12; }
 
         /* ================= FORMS & INPUTS ================= */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
-        .form-group { display: flex; flex-direction: column; gap: 10px; animation: slideInUp 0.6s ease backwards; }
-        .form-group:nth-child(1) { animation-delay: 0.15s; }
-        .form-group:nth-child(2) { animation-delay: 0.25s; }
-        .form-group:nth-child(3) { animation-delay: 0.35s; }
-        .form-group:nth-child(4) { animation-delay: 0.45s; }
-        .form-group:nth-child(5) { animation-delay: 0.55s; }
-        .form-group:nth-child(6) { animation-delay: 0.65s; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; animation: slideInUp 0.4s ease backwards; }
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
         .form-group.full { grid-column: 1 / -1; }
         
-        label { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-head); }
+        label { font-size: 0.75rem; font-weight: 800; color: var(--accent-secondary); text-transform: uppercase; letter-spacing: 1.5px; font-family: var(--font-head); }
         .input-elem {
-            appearance: none; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 1.2rem; border-radius: 12px; color: var(--text-main); font-family: var(--font-body); font-weight: 500; font-size: 1rem; transition: var(--transition-fast); outline: none;
+            appearance: none; background: #000; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 1.2rem; border-radius: var(--card-radius); color: var(--text-main); font-family: var(--font-head); font-weight: 600; font-size: 1rem; transition: var(--transition-fast); outline: none; text-transform: uppercase;
         }
         select.input-elem {
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat; background-position: right 1rem top 50%; background-size: 0.7rem auto;
         }
-        select.input-elem option { background-color: #1a1a1a; color: #fff; }
-        .input-elem:focus { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--border-glow); background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+        .input-elem:focus { border-color: var(--accent-primary); background: #111; }
         
         .slider-flex { display: flex; align-items: center; gap: 15px; }
-        .slider-flex input[type="range"] { flex: 1; accent-color: var(--accent-primary); cursor: pointer; transition: var(--transition-fast); }
-        .slider-flex input[type="range"]:hover { filter: brightness(1.2); }
+        .slider-flex input[type="range"] { flex: 1; accent-color: var(--accent-primary); cursor: pointer; }
         .slider-val { font-family: var(--font-head); font-size: 1.2rem; font-weight: 800; color: var(--accent-primary); width: 45px; text-align: right; }
 
         .btn-main {
-            grid-column: 1 / -1; padding: 1.2rem; border: none; border-radius: 14px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: #fff; font-family: var(--font-head); font-size: 1.15rem; font-weight: 900; letter-spacing: 1px;
-            cursor: pointer; box-shadow: 0 10px 25px var(--border-glow); transition: var(--transition-smooth);
-            margin-top: 1.5rem; text-transform: uppercase; animation: slideInUp 0.6s ease backwards; animation-delay: 0.75s;
+            grid-column: 1 / -1; padding: 1.2rem; border: none; border-radius: var(--card-radius);
+            background: var(--accent-primary); color: #000; font-family: var(--font-head); font-size: 1rem; font-weight: 900; letter-spacing: 2px;
+            cursor: pointer; transition: var(--transition-fast); margin-top: 1rem; text-transform: uppercase; animation: slideInUp 0.6s ease backwards; animation-delay: 0.7s;
         }
-        .btn-main:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 40px var(--accent-primary); filter: brightness(1.2); }
-        .btn-main:active { transform: translateY(0) scale(0.98); }
+        .btn-main:hover { background: #fff; color: #000; }
+        .btn-main:active { transform: scale(0.98); }
 
         /* ================= RESULT DISPLAY ================= */
         .cost-display {
-            text-align: center; padding: 2.5rem 1rem; border-radius: 16px;
-            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem;
-            transition: var(--transition-smooth);
+            text-align: center; padding: 2.5rem 1rem; border-radius: var(--card-radius);
+            background: #000; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem;
         }
-        .cost-display:hover { border-color: var(--border-glow); box-shadow: inset 0 0 20px var(--border-glow); }
-        .cost-value { font-family: var(--font-head); font-size: 4rem; font-weight: 900; color: var(--accent-primary); margin: 0.5rem 0; text-shadow: 0 0 35px var(--border-glow); letter-spacing: -2px; }
+        .cost-value { font-family: var(--font-head); font-size: 3.5rem; font-weight: 900; color: var(--accent-primary); margin: 0.5rem 0; letter-spacing: -1px; }
         
-        .badge { display: inline-block; padding: 0.6rem 1.8rem; border-radius: 30px; font-family: var(--font-head); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .badge.success { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; }
-        .badge.warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; }
-        .badge.danger { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid #f43f5e; }
+        .badge { display: inline-block; padding: 0.6rem 1.8rem; border-radius: var(--card-radius); font-family: var(--font-head); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .badge.success { background: #000; color: #10b981; border: 2px solid #10b981; }
+        .badge.warning { background: #000; color: #f59e0b; border: 2px solid #f59e0b; }
+        .badge.danger { background: #000; color: #f43f5e; border: 2px solid #f43f5e; }
 
         .breakdown-item {
             display: flex; justify-content: space-between; align-items: center; padding: 1.2rem;
-            background: rgba(255, 255, 255, 0.03); border-radius: 12px; margin-bottom: 12px;
+            background: #000; border-radius: var(--card-radius); margin-bottom: 8px;
             border-left: 4px solid var(--accent-primary); transition: var(--transition-fast);
-            font-weight: 600;
+            font-weight: 600; font-size: 0.9rem; text-transform: uppercase; font-family: var(--font-head);
         }
-        .breakdown-item:hover { background: rgba(255, 255, 255, 0.08); transform: translateX(8px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .breakdown-item strong { font-family: var(--font-head); font-size: 1.1rem; }
+        .breakdown-item:hover { background: #111; border-color: #fff; }
+        .breakdown-item strong { font-family: var(--font-head); font-size: 1.1rem; color: var(--text-main); }
 
         /* ================= DATA TABLE ================= */
-        .styled-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
-        .styled-table th, .styled-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        .styled-table th { color: var(--text-muted); font-weight: 800; text-transform: uppercase; font-size: 0.85rem; font-family: var(--font-head); letter-spacing: 1px;}
+        .styled-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .styled-table th, .styled-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .styled-table th { color: var(--accent-secondary); font-weight: 900; text-transform: uppercase; font-size: 0.75rem; font-family: var(--font-head); letter-spacing: 1px;}
         .styled-table tr { transition: var(--transition-fast); }
-        .styled-table tr:hover { background: rgba(255,255,255,0.05); transform: scale(1.01); }
+        .styled-table tr:hover { background: rgba(255,255,255,0.02); }
 
         /* ================= TOAST NOTIFICATIONS ================= */
         .toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
         .toast {
-            background: var(--bg-card); border-left: 5px solid var(--accent-primary); border-radius: 12px;
-            padding: 1.2rem 1.8rem; box-shadow: 0 15px 40px rgba(0,0,0,0.6); backdrop-filter: var(--glass-blur);
-            animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; display: flex; align-items: center; gap: 14px; font-weight: 700; font-family: var(--font-head);
+            background: #000; border: 2px solid var(--accent-primary); border-radius: var(--card-radius);
+            padding: 1.2rem 1.8rem; box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; display: flex; align-items: center; gap: 14px; font-weight: 800; font-family: var(--font-head); text-transform: uppercase; font-size: 0.9rem; color: #fff;
         }
         
         /* Responsive */
@@ -238,34 +221,29 @@ HTML_TEMPLATE = """
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="brand">
-            <div class="brand-logo"><i class="fa-solid fa-heart-pulse"></i></div>
+            <div class="brand-logo"><i class="fa-solid fa-flag-checkered"></i></div>
             <div class="brand-text">MEDICO<span style="color:var(--accent-primary)">.AI</span></div>
         </div>
         <nav class="nav-menu">
-            <div class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i> Predictor Engine</div>
-            <div class="nav-item"><i class="fa-solid fa-chart-pie"></i> Visual Analytics</div>
-            <div class="nav-item"><i class="fa-solid fa-database"></i> Patient Database</div>
-            <div class="nav-item"><i class="fa-solid fa-gear"></i> System Settings</div>
+            <div class="nav-item active"><i class="fa-solid fa-gauge-high"></i> Cost Telemetry</div>
+            <div class="nav-item"><i class="fa-solid fa-chart-simple"></i> Data Visuals</div>
+            <div class="nav-item"><i class="fa-solid fa-database"></i> Sector Logs</div>
+            <div class="nav-item"><i class="fa-solid fa-sliders"></i> Pit Settings</div>
         </nav>
         <div class="theme-selector">
-            <label><i class="fa-solid fa-palette"></i> Interface Theme</label>
+            <label><i class="fa-solid fa-paint-roller"></i> Constructor Theme</label>
             <select id="themeSelect" class="theme-select" onchange="changeTheme(this.value)">
-                <option value="netflix-dark">Netflix Dark (Red)</option>
-                <option value="cyberpunk">Cyberpunk Neon</option>
-                <option value="formula-grid">Formula Grid (Racing)</option>
-                <option value="neon-paddock">Neon Paddock</option>
-                <option value="deep-space">Deep Space</option>
-                <option value="solar-golden">Solar Golden</option>
-                <option value="purple-magic">Purple Magic</option>
-                <option value="ice-sapphire">Ice Sapphire</option>
-                <option value="emerald-bio">Emerald Bio</option>
-                <option value="crimson-velvet">Crimson Velvet</option>
-                <option value="matrix-obsidian">Matrix Obsidian</option>
-                <option value="oceanic">Oceanic Depths</option>
-                <option value="nebula">Cosmic Nebula</option>
-                <option value="sunset-synth">Sunset Synth</option>
-                <option value="monolith">Dark Monolith</option>
-                <option value="solar-light">Solar Light (Day)</option>
+                <option value="mercedes">Mercedes AMG</option>
+                <option value="mclaren">McLaren Papaya</option>
+                <option value="redbull">Red Bull Racing</option>
+                <option value="ferrari">Scuderia Ferrari</option>
+                <option value="williams">Williams Racing</option>
+                <option value="astonmartin">Aston Martin</option>
+                <option value="haas">Haas F1</option>
+                <option value="alpine">Alpine F1</option>
+                <option value="cadillac">Cadillac Racing</option>
+                <option value="audi">Audi Sport</option>
+                <option value="sauber">Kick Sauber</option>
             </select>
         </div>
     </aside>
@@ -273,8 +251,8 @@ HTML_TEMPLATE = """
     <!-- MAIN CONTENT -->
     <main class="main-content">
         <div class="header-title">
-            <h1>Diagnostic Cost Prediction</h1>
-            <p>Enter patient parameters to run the Machine Learning estimation model.</p>
+            <h1>Diagnostic Cost Telemetry</h1>
+            <p>Enter patient sector data to run ML cost projections.</p>
         </div>
 
         <div class="dashboard-grid">
@@ -282,8 +260,7 @@ HTML_TEMPLATE = """
             <!-- INPUT FORM -->
             <div class="glass-card input-card">
                 <div class="card-header">
-                    <span><i class="fa-solid fa-sliders"></i> Clinical Parameters</span>
-                    <i class="fa-solid fa-microchip"></i>
+                    <span><i class="fa-solid fa-clipboard-list"></i> Input Parameters</span>
                 </div>
                 <form id="predictForm" onsubmit="handlePrediction(event)">
                     <div class="form-grid">
@@ -291,7 +268,6 @@ HTML_TEMPLATE = """
                             <label>Patient Age: <span id="ageVal" style="color:var(--accent-primary)">35</span></label>
                             <div class="slider-flex">
                                 <input type="range" id="age" min="18" max="100" value="35" oninput="document.getElementById('ageVal').innerText = this.value">
-                                <span class="slider-val"><i class="fa-solid fa-cake-candles"></i></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -312,7 +288,6 @@ HTML_TEMPLATE = """
                             <label>Body Mass Index (BMI): <span id="bmiVal" style="color:var(--accent-primary)">26.5</span></label>
                             <div class="slider-flex">
                                 <input type="range" id="bmi" min="15.0" max="55.0" step="0.1" value="26.5" oninput="document.getElementById('bmiVal').innerText = this.value">
-                                <span class="slider-val"><i class="fa-solid fa-weight-scale"></i></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -329,7 +304,7 @@ HTML_TEMPLATE = """
                             </select>
                         </div>
                         <button type="submit" class="btn-main" id="submitBtn">
-                            <i class="fa-solid fa-bolt"></i> Generate Estimation
+                            Initiate Projection
                         </button>
                     </div>
                 </form>
@@ -338,16 +313,15 @@ HTML_TEMPLATE = """
             <!-- RESULT CARD -->
             <div class="glass-card result-card">
                 <div class="card-header">
-                    <span><i class="fa-solid fa-receipt"></i> Financial Projection</span>
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span><i class="fa-solid fa-flag-checkered"></i> Projection Output</span>
                 </div>
                 <div class="cost-display">
-                    <div style="color: var(--text-muted); text-transform: uppercase; font-size: 0.9rem; font-weight: 800; font-family: var(--font-head); letter-spacing: 1px;">Total Estimated Charge</div>
+                    <div style="color: var(--accent-secondary); text-transform: uppercase; font-size: 0.8rem; font-weight: 900; font-family: var(--font-head); letter-spacing: 2px;">Estimated Total Charge</div>
                     <div class="cost-value" id="costOutput">---</div>
                     <div id="riskBadge" class="badge warning" style="display:none;">Awaiting Data</div>
                 </div>
                 <div id="breakdownList">
-                    <p style="text-align:center; color: var(--text-muted); margin-top: 2.5rem; font-weight: 500;">Submit parameters to view financial breakdown.</p>
+                    <p style="text-align:center; color: var(--text-muted); margin-top: 2.5rem; font-weight: 500; font-family:var(--font-head); text-transform:uppercase;">Input data to view breakdown.</p>
                 </div>
             </div>
 
@@ -358,15 +332,15 @@ HTML_TEMPLATE = """
             </div>
             
             <div class="glass-card chart-card">
-                <div class="card-header"><span><i class="fa-solid fa-chart-pie"></i> Cost Breakdown Distribution</span></div>
+                <div class="card-header"><span><i class="fa-solid fa-chart-pie"></i> Cost Distribution Profile</span></div>
                 <div class="chart-container"><canvas id="doughnutChart"></canvas></div>
             </div>
 
             <!-- HISTORY TABLE -->
             <div class="glass-card table-card">
                 <div class="card-header">
-                    <span><i class="fa-solid fa-clock-rotate-left"></i> Recent Estimations Ledger</span>
-                    <button onclick="loadHistory()" style="background:rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 8px; border:1px solid rgba(255,255,255,0.1); color:var(--text-main); font-family: var(--font-head); font-weight: 700; cursor:pointer; transition: var(--transition-fast);"><i class="fa-solid fa-rotate-right" style="color:var(--accent-primary)"></i> Refresh</button>
+                    <span><i class="fa-solid fa-clock-rotate-left"></i> Historic Telemetry Logs</span>
+                    <button onclick="loadHistory()" style="background:#000; padding: 0.5rem 1rem; border-radius: 0; border:1px solid var(--accent-primary); color:var(--accent-primary); font-family: var(--font-head); font-weight: 800; cursor:pointer; text-transform:uppercase;"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="styled-table">
@@ -381,7 +355,7 @@ HTML_TEMPLATE = """
                             </tr>
                         </thead>
                         <tbody id="historyTableBody">
-                            <tr><td colspan="6" style="text-align:center;">Loading records...</td></tr>
+                            <tr><td colspan="6" style="text-align:center; font-family:var(--font-head); text-transform:uppercase;">Loading records...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -403,7 +377,7 @@ HTML_TEMPLATE = """
             const box = document.getElementById('toastBox');
             const toast = document.createElement('div');
             toast.className = 'toast';
-            const icon = type === 'success' ? '<i class="fa-solid fa-circle-check" style="color:#10b981; font-size:1.2rem;"></i>' : '<i class="fa-solid fa-triangle-exclamation" style="color:#f43f5e; font-size:1.2rem;"></i>';
+            const icon = type === 'success' ? '<i class="fa-solid fa-circle-check" style="color:var(--accent-primary); font-size:1.2rem;"></i>' : '<i class="fa-solid fa-triangle-exclamation" style="color:#f43f5e; font-size:1.2rem;"></i>';
             toast.innerHTML = `${icon} <span>${message}</span>`;
             box.appendChild(toast);
             setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(50px)'; setTimeout(() => toast.remove(), 400); }, 3500);
@@ -412,18 +386,18 @@ HTML_TEMPLATE = """
         // Theme Management
         function changeTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('medico_theme', theme);
+            localStorage.setItem('medico_f1_theme', theme);
             setTimeout(renderCharts, 150); // Re-render charts with new colors
         }
 
         // Setup on load
         window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('medico_theme');
+            const savedTheme = localStorage.getItem('medico_f1_theme');
             if (savedTheme) {
                 document.getElementById('themeSelect').value = savedTheme;
                 document.documentElement.setAttribute('data-theme', savedTheme);
             } else {
-                document.getElementById('themeSelect').value = "netflix-dark";
+                document.getElementById('themeSelect').value = "mercedes";
             }
             loadAnalyticsData();
             loadHistory();
@@ -440,7 +414,6 @@ HTML_TEMPLATE = """
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                // Ease out cubic
                 const easeProgress = 1 - Math.pow(1 - progress, 3);
                 const current = easeProgress * (end - start) + start;
                 obj.innerHTML = "$" + current.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits:2});
@@ -469,11 +442,11 @@ HTML_TEMPLATE = """
                 const data = await res.json();
                 
                 if(data.success) {
-                    showToast('Prediction generated successfully!');
+                    showToast('Projection Generated!');
                     
                     // Animate number
                     const costEl = document.getElementById('costOutput');
-                    animateValue(costEl, 0, data.charge_val, 1200);
+                    animateValue(costEl, 0, data.charge_val, 1000);
                     
                     // Update Badge
                     const badge = document.getElementById('riskBadge');
@@ -496,9 +469,9 @@ HTML_TEMPLATE = """
                     showToast(data.error, 'error');
                 }
             } catch(err) {
-                showToast('Server connection failed.', 'error');
+                showToast('Telemetry Connection Failed.', 'error');
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Generate Estimation';
+                btn.innerHTML = 'Initiate Projection';
             }
         }
 
@@ -511,24 +484,24 @@ HTML_TEMPLATE = """
                 tbody.innerHTML = '';
                 
                 if(data.records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No records found.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No logs found.</td></tr>';
                     return;
                 }
                 
                 data.records.forEach(row => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td><span style="color:var(--text-muted); font-size:0.85rem">${row.timestamp}</span></td>
-                        <td>${row.age}</td>
-                        <td>${row.bmi}</td>
-                        <td><span style="color:${row.smoker==='yes' ? '#f43f5e' : '#10b981'}; font-weight:700;">${row.smoker.toUpperCase()}</span></td>
-                        <td><span style="text-transform:capitalize;">${row.region}</span></td>
-                        <td style="font-weight:800; font-family: var(--font-head); color:var(--accent-primary)">$${row.charge.toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+                        <td><span style="color:var(--text-muted); font-size:0.85rem; font-family:var(--font-head); font-weight:700;">${row.timestamp}</span></td>
+                        <td style="font-family:var(--font-head); font-weight:700;">${row.age}</td>
+                        <td style="font-family:var(--font-head); font-weight:700;">${row.bmi}</td>
+                        <td><span style="color:${row.smoker==='yes' ? '#f43f5e' : '#10b981'}; font-weight:900; font-family:var(--font-head);">${row.smoker.toUpperCase()}</span></td>
+                        <td style="text-transform:uppercase; font-family:var(--font-head); font-weight:700;">${row.region}</td>
+                        <td style="font-weight:900; font-family: var(--font-head); color:var(--accent-primary)">$${row.charge.toLocaleString(undefined,{minimumFractionDigits:2})}</td>
                     `;
                     tbody.appendChild(tr);
                 });
             } catch(err) {
-                console.error("Failed to load history");
+                console.error("Failed to load telemetry logs");
             }
         }
 
@@ -550,33 +523,29 @@ HTML_TEMPLATE = """
             const sec = getCss('--accent-secondary');
             const textMain = getCss('--text-main');
             const textMuted = getCss('--text-muted');
-            const fontFamily = getCss('--font-body');
+            const fontHead = getCss('--font-head');
 
             // --- Line Chart (Age Trend) ---
             if(lineChartObj) lineChartObj.destroy();
             const lineCtx = document.getElementById('lineChart').getContext('2d');
-            
-            // Gradient fill
-            let gradientFill = lineCtx.createLinearGradient(0, 0, 0, 400);
-            gradientFill.addColorStop(0, prim.replace('rgb', 'rgba').replace(')', ', 0.3)'));
-            gradientFill.addColorStop(1, 'rgba(0,0,0,0)');
 
             lineChartObj = new Chart(lineCtx, {
                 type: 'line',
                 data: {
                     labels: chartDataCache.age_trend.labels,
                     datasets: [
-                        { label: 'Smoker Base', data: chartDataCache.age_trend.smoker_cost, borderColor: sec, borderDash: [5, 5], tension: 0.4 },
-                        { label: 'Non-Smoker Trend', data: chartDataCache.age_trend.non_smoker_cost, borderColor: prim, backgroundColor: gradientFill, fill: true, tension: 0.4 }
+                        { label: 'Smoker Baseline', data: chartDataCache.age_trend.smoker_cost, borderColor: sec, borderDash: [5, 5], tension: 0, borderWidth: 2 },
+                        { label: 'Non-Smoker Trajectory', data: chartDataCache.age_trend.non_smoker_cost, borderColor: prim, backgroundColor: prim.replace(')', ', 0.1)').replace('rgb', 'rgba'), fill: true, tension: 0, borderWidth: 3 }
                     ]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: textMain, font: {family: fontFamily, weight: 600} } } },
+                    plugins: { legend: { labels: { color: textMain, font: {family: fontHead, weight: 800} } } },
                     scales: {
-                        x: { ticks: { color: textMuted, font: {family: fontFamily} }, grid: { display: false } },
-                        y: { ticks: { color: textMuted, font: {family: fontFamily} }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                    }
+                        x: { ticks: { color: textMuted, font: {family: fontHead, weight:700} }, grid: { display: false } },
+                        y: { ticks: { color: textMuted, font: {family: fontHead, weight:700} }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    },
+                    elements: { point: { radius: 0, hitRadius: 10, hoverRadius: 5 } } // Sleek telemetry look
                 }
             });
 
@@ -599,10 +568,11 @@ HTML_TEMPLATE = """
                     datasets: [{
                         data: dData,
                         backgroundColor: [
-                            prim, sec, getCss('--border-glow'), '#ffffff'
+                            prim, sec, '#555555', '#222222'
                         ],
-                        borderWidth: 0,
-                        hoverOffset: 15
+                        borderWidth: 2,
+                        borderColor: getCss('--bg-card'),
+                        hoverOffset: 10
                     }]
                 },
                 options: {
@@ -610,7 +580,7 @@ HTML_TEMPLATE = """
                     cutout: '75%',
                     animation: { animateScale: true, animateRotate: true },
                     plugins: {
-                        legend: { position: 'right', labels: { color: textMain, font: {family: fontFamily, weight: 600}, padding: 20 } }
+                        legend: { position: 'right', labels: { color: textMain, font: {family: fontHead, weight: 800}, padding: 20 } }
                     }
                 }
             });
@@ -879,7 +849,7 @@ def api_analytics():
 
 if __name__ == '__main__':
     print("==================================================")
-    print("🚀 MEDICO.AI V4 SERVER BOOTING...")
+    print("🚀 MEDICO.AI V5 SERVER BOOTING... (F1 TELEMETRY EDITION)")
     print("==================================================")
     
     # This automatically grabs the port Render assigns, or defaults to 5000 locally
